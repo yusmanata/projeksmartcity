@@ -15,8 +15,15 @@
             </p>
             <div class="mt-8 flex gap-4">
               <router-link
-                to="/contact"
+                to="/BuatLaporan"
                 class="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-[#5D5A88] shadow"
+              >
+                Buat Laporan →
+              </router-link>
+
+              <router-link
+                to="/contact"
+                class="inline-flex items-center justify-center rounded-full border border-white/30 px-6 py-3 text-sm font-medium text-white hover:bg-white/5"
               >
                 Contact Us →
               </router-link>

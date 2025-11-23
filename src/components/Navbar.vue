@@ -1,5 +1,5 @@
 <template>
-  <header class="absolute inset-x-0 top-0 z-50 bg-white shadow-sm">
+  <header class="relative z-50 bg-white shadow-sm">
     <nav
       aria-label="Global"
       class="flex items-center justify-between p-6 lg:px-8"
@@ -41,15 +41,15 @@
           class="text-sm/6 font-semibold text-[#5D5A88] hover:bg-gray-100"
           >Home</router-link
         >
-        <a
-          href="#"
+        <router-link
+          to="/BuatLaporan"
           class="text-sm/6 font-semibold text-[#5D5A88] hover:bg-gray-100"
-          >Buat Laporan</a
+          >Buat Laporan</router-link
         >
-        <a
-          href="#"
+        <router-link
+          to="/DaftarLaporan"
           class="text-sm/6 font-semibold text-[#5D5A88] hover:bg-gray-100"
-          >Daftar Laporan</a
+          >Daftar Laporan</router-link
         >
         <a
           href="#"
