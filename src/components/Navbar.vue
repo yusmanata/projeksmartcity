@@ -51,10 +51,10 @@
           class="text-sm/6 font-semibold text-[#5D5A88] hover:bg-gray-100"
           >Daftar Laporan</router-link
         >
-        <a
-          href="#"
+        <router-link
+          to="/DaftarCCTV"
           class="text-sm/6 font-semibold text-[#5D5A88] hover:bg-gray-100"
-          >CCTV</a
+          >CCTV</router-link
         >
         <router-link
           to="/contact"

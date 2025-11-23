@@ -2,12 +2,15 @@
 import { ref, computed } from "vue";
 
 const searchTerm = ref("");
+const selectedStatus = ref("");
 
 const reports = ref([
   {
     id: 1,
     title: "Banjir Bandang di Jalan Merdeka",
     desc: "Banjir menggenangi jalan utama setelah hujan deras.",
+    location: "Jl. Merdeka No. 45, Balikpapan",
+    date: "20 November 2025",
     img: "/src/assets/banjir.jpg",
     status: "Menunggu",
     time: "6 mins ago",
@@ -19,6 +22,8 @@ const reports = ref([
     id: 2,
     title: "Pohon Tumbang di Taman Kota",
     desc: "Pohon besar tumbang dan menutup jalur pejalan kaki.",
+    location: "Jl. Taman Raya, Balikpapan",
+    date: "13 November 2025",
     img: "/src/assets/banjir.jpg",
     status: "Selesai",
     time: "10 days ago",
@@ -30,6 +35,8 @@ const reports = ref([
     id: 3,
     title: "Longsor di Perbukitan",
     desc: "Longsor kecil menghalangi akses jalan pedesaan.",
+    location: "Jl. Perbukitan Indah, Balikpapan Utara",
+    date: "22 November 2025",
     img: "/src/assets/banjir.jpg",
     status: "Proses",
     time: "16 hours ago",
@@ -41,13 +48,16 @@ const reports = ref([
 
 const filteredReports = computed(() => {
   const q = searchTerm.value.trim().toLowerCase();
-  if (!q) return reports.value;
   return reports.value.filter((r) => {
-    return (
+    const matchesQ =
+      !q ||
       r.title.toLowerCase().includes(q) ||
       r.desc.toLowerCase().includes(q) ||
-      r.category.toLowerCase().includes(q)
-    );
+      r.category.toLowerCase().includes(q);
+    const matchesStatus =
+      !selectedStatus.value ||
+      r.status.toLowerCase() === selectedStatus.value.toLowerCase();
+    return matchesQ && matchesStatus;
   });
 });
 
@@ -62,7 +72,9 @@ function statusClass(status) {
 
 <template>
   <div class="max-w-screen-xl mx-auto p-5 sm:p-10 md:p-16">
-    <div class="flex items-center justify-between mb-6">
+    <div
+      class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6"
+    >
       <div class="flex items-center gap-4">
         <svg
           class="h-6 text-indigo-600"
@@ -85,25 +97,43 @@ function statusClass(status) {
             stroke-linejoin="round"
           />
         </svg>
-        <h2 class="text-lg font-semibold text-gray-800">Daftar Laporan</h2>
-        <span class="text-sm text-gray-500"></span>
+        <div>
+          <h2 class="text-2xl font-bold text-[#5D5A88]">Daftar Laporan</h2>
+          <p class="text-base text-[#5D5A88] mt-1">
+            Lihat dan pantau semua laporan yang telah dibuat oleh masyarakat
+          </p>
+        </div>
       </div>
 
-      <!-- Search bar -->
-      <div class="flex items-center gap-2">
-        <input
-          v-model="searchTerm"
-          type="text"
-          placeholder="Cari laporan, kategori, deskripsi..."
-          class="w-64 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
-        />
-        <button
-          @click="searchTerm = ''"
-          class="text-sm text-gray-600 px-3 py-2 rounded-lg hover:bg-gray-100"
-          title="Reset"
-        >
-          Reset
-        </button>
+      <div class="flex flex-col sm:flex-row sm:items-center sm:gap-4">
+        <div class="flex items-center gap-2 mb-2 sm:mb-0">
+          <select
+            v-model="selectedStatus"
+            class="border border-gray-400 p-2 rounded-lg focus:outline-none focus:border-blue-400 text-sm"
+          >
+            <option value="">Semua Status</option>
+            <option value="Menunggu">Menunggu</option>
+            <option value="Proses">Proses</option>
+            <option value="Selesai">Selesai</option>
+          </select>
+        </div>
+
+        <!-- Search bar -->
+        <div class="flex items-center gap-2">
+          <input
+            v-model="searchTerm"
+            type="text"
+            placeholder="Cari laporan, kategori, deskripsi..."
+            class="w-64 rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+          />
+          <button
+            @click="searchTerm = ''"
+            class="text-sm text-gray-600 px-3 py-2 rounded-lg hover:bg-gray-100"
+            title="Reset"
+          >
+            Reset
+          </button>
+        </div>
       </div>
     </div>
 
@@ -137,7 +167,39 @@ function statusClass(status) {
               class="font-medium text-lg text-gray-800 hover:text-indigo-600 block mb-2"
               >{{ report.title }}</a
             >
-            <p class="text-gray-500 text-sm">{{ report.desc }}</p>
+            <p class="text-gray-500 text-sm mb-3">{{ report.desc }}</p>
+            <div class="flex flex-col gap-1 text-xs text-gray-600">
+              <div class="flex items-center gap-1">
+                <svg
+                  class="h-3.5 w-3.5 text-gray-500"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <path
+                    d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"
+                  ></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <span>{{ report.location }}</span>
+              </div>
+              <div class="flex items-center gap-1">
+                <svg
+                  class="h-3.5 w-3.5 text-gray-500"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                >
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                  <line x1="16" y1="2" x2="16" y2="6"></line>
+                  <line x1="8" y1="2" x2="8" y2="6"></line>
+                  <line x1="3" y1="10" x2="21" y2="10"></line>
+                </svg>
+                <span>{{ report.date }}</span>
+              </div>
+            </div>
           </div>
 
           <div class="px-6 py-3 flex items-center justify-between bg-gray-50">
