@@ -2,20 +2,24 @@
   <header class="relative z-50 bg-white shadow-sm">
     <nav
       aria-label="Global"
-      class="flex items-center justify-between p-6 lg:px-8"
+      class="flex items-center justify-center p-4 md:p-6 lg:px-8 relative"
     >
-      <div class="flex lg:flex-1">
-        <a href="#" class="-m-1.5 p-1.5">
-          <span class="sr-only">Your Company</span>
-          <img src="/src/assets/logo.png" alt="" class="h-8 w-auto" />
-        </a>
+      <div class="absolute left-4 md:left-6 lg:left-8">
+        <router-link to="/" class="-m-1.5 p-1.5">
+          <span class="sr-only">Smart City Balikpapan</span>
+          <img
+            src="/src/assets/logo.png"
+            alt="Logo"
+            class="h-8 md:h-10 w-auto"
+          />
+        </router-link>
       </div>
-      <div class="flex lg:hidden">
+      <div class="absolute right-4 md:right-6 lg:right-8 md:hidden">
         <button
           type="button"
           command="show-modal"
           commandfor="mobile-menu"
-          class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+          class="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 hover:bg-gray-100 transition-colors"
         >
           <span class="sr-only">Open main menu</span>
           <svg
@@ -35,54 +39,45 @@
           </svg>
         </button>
       </div>
-      <div class="hidden lg:flex lg:gap-x-12">
+      <div class="hidden md:flex md:gap-x-6 lg:gap-x-12">
         <router-link
           to="/"
-          class="text-sm/6 font-semibold text-[#5D5A88] hover:bg-gray-100"
+          class="text-sm/6 font-semibold text-[#5D5A88] hover:bg-gray-100 px-2 md:px-3 py-2 rounded-lg transition-colors"
           >Home</router-link
         >
         <router-link
           to="/BuatLaporan"
-          class="text-sm/6 font-semibold text-[#5D5A88] hover:bg-gray-100"
+          class="text-sm/6 font-semibold text-[#5D5A88] hover:bg-gray-100 px-2 md:px-3 py-2 rounded-lg transition-colors"
           >Buat Laporan</router-link
         >
         <router-link
           to="/DaftarLaporan"
-          class="text-sm/6 font-semibold text-[#5D5A88] hover:bg-gray-100"
+          class="text-sm/6 font-semibold text-[#5D5A88] hover:bg-gray-100 px-2 md:px-3 py-2 rounded-lg transition-colors"
           >Daftar Laporan</router-link
         >
         <router-link
           to="/DaftarCCTV"
-          class="text-sm/6 font-semibold text-[#5D5A88] hover:bg-gray-100"
+          class="text-sm/6 font-semibold text-[#5D5A88] hover:bg-gray-100 px-2 md:px-3 py-2 rounded-lg transition-colors"
           >CCTV</router-link
         >
         <router-link
           to="/contact"
-          class="text-sm/6 font-semibold text-[#5D5A88] hover:bg-gray-100"
+          class="text-sm/6 font-semibold text-[#5D5A88] hover:bg-gray-100 px-2 md:px-3 py-2 rounded-lg transition-colors"
           >Kontak</router-link
-        >
-      </div>
-      <div class="hidden lg:flex lg:flex-1 lg:justify-end">
-        <a href="#" class="text-sm/6 font-semibold text-[#5D5A88]"
-          >Log in <span aria-hidden="true">&rarr;</span></a
         >
       </div>
     </nav>
     <el-dialog>
-      <dialog id="mobile-menu" class="backdrop:bg-transparent lg:hidden">
+      <dialog id="mobile-menu" class="backdrop:bg-transparent md:hidden">
         <div tabindex="0" class="fixed inset-0 focus:outline-none">
           <el-dialog-panel
             class="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10"
           >
             <div class="flex items-center justify-between">
-              <a href="#" class="-m-1.5 p-1.5">
-                <span class="sr-only">Your Company</span>
-                <img
-                  src="https://tailwindcss.com/plus-assets/img/logos/mark.svg?color=indigo&shade=600"
-                  alt=""
-                  class="h-8 w-auto"
-                />
-              </a>
+              <router-link to="/" class="-m-1.5 p-1.5">
+                <span class="sr-only">Smart City Balikpapan</span>
+                <img src="/src/assets/logo.png" alt="Logo" class="h-8 w-auto" />
+              </router-link>
               <button
                 type="button"
                 command="close"
@@ -110,37 +105,40 @@
             <div class="mt-6 flow-root">
               <div class="-my-6 divide-y divide-gray-500/10">
                 <div class="space-y-2 py-6">
-                  <a
-                    href="#"
+                  <router-link
+                    to="/"
+                    command="close"
+                    commandfor="mobile-menu"
                     class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
-                    >Home</a
+                    >Home</router-link
                   >
-                  <a
-                    href="#"
+                  <router-link
+                    to="/BuatLaporan"
+                    command="close"
+                    commandfor="mobile-menu"
                     class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
-                    >Buat Laporan</a
+                    >Buat Laporan</router-link
                   >
-                  <a
-                    href="#"
+                  <router-link
+                    to="/DaftarLaporan"
+                    command="close"
+                    commandfor="mobile-menu"
                     class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
-                    >Daftar laporan</a
+                    >Daftar Laporan</router-link
                   >
-                  <a
-                    href="#"
+                  <router-link
+                    to="/DaftarCCTV"
+                    command="close"
+                    commandfor="mobile-menu"
                     class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
-                    >CCTV</a
+                    >CCTV</router-link
                   >
-                  <a
-                    href="#"
+                  <router-link
+                    to="/contact"
+                    command="close"
+                    commandfor="mobile-menu"
                     class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
-                    >Kontak</a
-                  >
-                </div>
-                <div class="py-6">
-                  <a
-                    href="#"
-                    class="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
-                    >Log in</a
+                    >Kontak</router-link
                   >
                 </div>
               </div>

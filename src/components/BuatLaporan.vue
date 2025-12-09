@@ -1,26 +1,129 @@
+<script setup>
+import { ref } from "vue";
+import { useRouter } from "vue-router";
+import { reportStore } from "../stores/reportStore";
+
+const router = useRouter();
+
+const formData = ref({
+  name: "",
+  title: "",
+  category: "",
+  desc: "",
+  location: "",
+  img: "/src/assets/banjir.jpg", // default image
+});
+
+const submitted = ref(false);
+const showSuccess = ref(false);
+const selectedFile = ref(null);
+const previewUrl = ref(null);
+
+const handleFileChange = (event) => {
+  const file = event.target.files[0];
+  if (file) {
+    selectedFile.value = file;
+
+    // Create preview URL
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      previewUrl.value = e.target.result;
+      formData.value.img = e.target.result; // Store base64 in formData
+    };
+    reader.readAsDataURL(file);
+  }
+};
+
+const removeFile = () => {
+  selectedFile.value = null;
+  previewUrl.value = null;
+  formData.value.img = "/src/assets/banjir.jpg";
+};
+
+const handleSubmit = (e) => {
+  e.preventDefault();
+
+  // Format tanggal
+  const today = new Date();
+  const formattedDate = today.toLocaleDateString("id-ID", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+
+  // Tambahkan laporan ke store
+  reportStore.addReport({
+    title: formData.value.title,
+    desc: formData.value.desc,
+    location: formData.value.location,
+    date: formattedDate,
+    img: formData.value.img,
+    category: formData.value.category,
+  });
+
+  // Reset form
+  formData.value = {
+    name: "",
+    title: "",
+    category: "",
+    desc: "",
+    location: "",
+    img: "/src/assets/banjir.jpg",
+  };
+  selectedFile.value = null;
+  previewUrl.value = null;
+
+  // Show success message
+  showSuccess.value = true;
+  submitted.value = true;
+
+  // Hide success message and redirect after 2 seconds
+  setTimeout(() => {
+    showSuccess.value = false;
+    router.push("/DaftarLaporan");
+  }, 2000);
+};
+</script>
+
 <template>
-  <div class="bg-[#E7E6F2] min-h-screen">
+  <div class="bg-[#E7E6F2] -my-8 py-8 px-2 sm:px-0">
+    <!-- Success Message -->
+    <div
+      v-if="showSuccess"
+      class="fixed top-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center gap-2"
+    >
+      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
+        <path
+          fill-rule="evenodd"
+          d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+          clip-rule="evenodd"
+        />
+      </svg>
+      <span>Laporan berhasil dibuat! Mengalihkan ke Daftar Laporan...</span>
+    </div>
+
     <div class="bg-white border rounded-lg px-8 py-6 mx-auto my-8 max-w-2xl">
-      <h2 class="text-2xl font-medium mb-4">Buat Laporan Baru</h2>
-      <form>
-        <div class="mb-4">
+      <h2 class="text-2xl font-medium mb-2">Buat Laporan Baru</h2>
+      <form @submit="handleSubmit" class="flex flex-col gap-4">
+        <div class="">
           <label for="name" class="block text-gray-700 font-medium mb-2"
             >Nama Pelapor (optional)</label
           >
           <input
+            v-model="formData.name"
             type="text"
             id="name"
             name="name"
             class="border border-gray-400 p-2 w-full rounded-lg focus:outline-none focus:border-blue-400"
             placeholder="Yusma Nata"
-            required
           />
         </div>
-        <div class="mb-4">
+        <div class="">
           <label for="age" class="block text-gray-700 font-medium mb-2"
             >Judul Laporan</label
           >
           <input
+            v-model="formData.title"
             type="text"
             id="judul"
             name="judul"
@@ -29,49 +132,76 @@
             required
           />
         </div>
-        <div class="mb-4">
+        <div class="">
           <label for="kategori" class="block text-gray-700 font-medium mb-2"
             >Kategori</label
           >
           <select
+            v-model="formData.category"
             id="kategori"
             name="kategori"
             class="border border-gray-400 p-2 w-full rounded-lg focus:outline-none focus:border-blue-400"
             required
           >
             <option value="">Select Kategori</option>
-            <option value="male">Pencurian</option>
-            <option value="female">Lampu Mati</option>
-            <option value="other">Kebakaran</option>
+            <option value="Pencurian">Pencurian</option>
+            <option value="Lampu Mati">Lampu Mati</option>
+            <option value="Kebakaran">Kebakaran</option>
+            <option value="Banjir">Banjir</option>
+            <option value="Jalan Rusak">Jalan Rusak</option>
+            <option value="Lingkungan">Lingkungan</option>
           </select>
         </div>
 
-        <div class="mb-4">
+        <div class="">
           <label for="deskripsi" class="block text-gray-700 font-medium mb-2"
             >Deskripsi</label
           >
           <textarea
+            v-model="formData.desc"
             id="deskripsi"
             name="deskripsi"
             class="border border-gray-400 p-2 w-full rounded-lg focus:outline-none focus:border-blue-400"
             rows="5"
             placeholder="Terjadi Pencurian di Jalan Merdeka..."
+            required
           ></textarea>
         </div>
 
-        <div class="mx-auto w-full max-w-[550px] bg-white">
-          <div class="mb-6 pt-4">
-            <label class="block text-gray-700 font-medium mb-2">
+        <div class="mx-auto w-full bg-white">
+          <div class="flex flex-col gap-4 mb-6">
+            <label class="block text-gray-700 font-medium">
               Foto Pendukung (Opsional)
             </label>
 
-            <div class="mb-8">
-              <input type="file" name="file" id="file" class="sr-only" />
+            <!-- Upload Area (Show if no file) -->
+            <div v-if="!previewUrl" class="">
+              <input
+                type="file"
+                name="file"
+                id="file"
+                class="sr-only"
+                accept="image/*"
+                @change="handleFileChange"
+              />
               <label
                 for="file"
-                class="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center"
+                class="relative flex min-h-[200px] items-center justify-center rounded-md border border-dashed border-[#e0e0e0] p-12 text-center cursor-pointer hover:border-blue-400 transition-colors"
               >
                 <div>
+                  <svg
+                    class="mx-auto h-12 w-12 text-gray-400 mb-4"
+                    stroke="currentColor"
+                    fill="none"
+                    viewBox="0 0 48 48"
+                  >
+                    <path
+                      d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                    />
+                  </svg>
                   <span class="mb-2 block text-xl font-semibold text-[#07074D]">
                     Drop files here
                   </span>
@@ -79,95 +209,66 @@
                     Or
                   </span>
                   <span
-                    class="inline-flex rounded border border-[#e0e0e0] py-2 px-7 text-base font-medium text-[#07074D]"
+                    class="inline-flex rounded border border-[#e0e0e0] py-2 px-7 text-base font-medium text-[#07074D] hover:bg-gray-50"
                   >
                     Browse
                   </span>
+                  <p class="mt-2 text-xs text-gray-500">
+                    PNG, JPG, GIF up to 10MB
+                  </p>
                 </div>
               </label>
             </div>
 
-            <div class="mb-5 rounded-md bg-[#F5F7FB] py-4 px-8">
-              <div class="flex items-center justify-between">
-                <span
-                  class="truncate pr-3 text-base font-medium text-[#07074D]"
+            <!-- Image Preview (Show if file uploaded) -->
+            <div v-else class="relative">
+              <img
+                :src="previewUrl"
+                alt="Preview"
+                class="w-full h-64 object-cover rounded-lg border border-gray-300"
+              />
+              <button
+                type="button"
+                @click="removeFile"
+                class="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  foto-kecelakaan.png
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+              <div class="mt-2 text-sm text-gray-600">
+                <span class="font-medium">{{ selectedFile?.name }}</span>
+                <span class="text-gray-500 ml-2">
+                  ({{ (selectedFile?.size / 1024 / 1024).toFixed(2) }} MB)
                 </span>
-                <button class="text-[#07074D]">
-                  <svg
-                    width="10"
-                    height="10"
-                    viewBox="0 0 10 10"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M0.279337 0.279338C0.651787 -0.0931121 1.25565 -0.0931121 1.6281 0.279338L9.72066 8.3719C10.0931 8.74435 10.0931 9.34821 9.72066 9.72066C9.34821 10.0931 8.74435 10.0931 8.3719 9.72066L0.279337 1.6281C-0.0931125 1.25565 -0.0931125 0.651788 0.279337 0.279338Z"
-                      fill="currentColor"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M0.279337 9.72066C-0.0931125 9.34821 -0.0931125 8.74435 0.279337 8.3719L8.3719 0.279338C8.74435 -0.0931127 9.34821 -0.0931123 9.72066 0.279338C10.0931 0.651787 10.0931 1.25565 9.72066 1.6281L1.6281 9.72066C1.25565 10.0931 0.651787 10.0931 0.279337 9.72066Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                </button>
               </div>
             </div>
 
-            <div class="rounded-md bg-[#F5F7FB] py-4 px-8">
-              <div class="flex items-center justify-between">
-                <span
-                  class="truncate pr-3 text-base font-medium text-[#07074D]"
-                >
-                  foto-lokasi.png
-                </span>
-                <button class="text-[#07074D]">
-                  <svg
-                    width="10"
-                    height="10"
-                    viewBox="0 0 10 10"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M0.279337 0.279338C0.651787 -0.0931121 1.25565 -0.0931121 1.6281 0.279338L9.72066 8.3719C10.0931 8.74435 10.0931 9.34821 9.72066 9.72066C9.34821 10.0931 8.74435 10.0931 8.3719 9.72066L0.279337 1.6281C-0.0931125 1.25565 -0.0931125 0.651788 0.279337 0.279338Z"
-                      fill="currentColor"
-                    />
-                    <path
-                      fill-rule="evenodd"
-                      clip-rule="evenodd"
-                      d="M0.279337 9.72066C-0.0931125 9.34821 -0.0931125 8.74435 0.279337 8.3719L8.3719 0.279338C8.74435 -0.0931127 9.34821 -0.0931123 9.72066 0.279338C10.0931 0.651787 10.0931 1.25565 9.72066 1.6281L1.6281 9.72066C1.25565 10.0931 0.651787 10.0931 0.279337 9.72066Z"
-                      fill="currentColor"
-                    />
-                  </svg>
-                </button>
-              </div>
-              <div class="relative mt-5 h-[6px] w-full rounded-lg bg-[#E2E5EF]">
-                <div
-                  class="absolute left-0 right-0 h-full w-[75%] rounded-lg bg-[#6A64F1]"
-                ></div>
-              </div>
-            </div>
-            <div class="mb-5">
+            <div class="">
               <label for="email" class="block text-gray-700 font-medium mb-2">
                 Lokasi Pelaporan
               </label>
               <input
+                v-model="formData.location"
                 type="text"
                 name="lokasi"
                 id="lokasi"
                 placeholder="Jalanan Merdeka No.123, Balikpapan"
                 class="w-full rounded-md border border-[#e0e0e0] bg-white py-3 px-6 text-base font-medium text-[#6B7280] outline-none focus:border-[#6A64F1] focus:shadow-md"
+                required
               />
             </div>
-            <div class="flex items-center gap-4">
+            <div class="flex items-center justify-end gap-4">
               <button
                 type="reset"
                 class="bg-gray-200 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-300"

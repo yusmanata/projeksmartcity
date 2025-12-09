@@ -8,8 +8,9 @@
           Frequently Asked Questions
         </h2>
         <p class="mt-4 text-lg text-[#5D5A88]">
-          Cras tincidunt lobortis feugiat vivamus at morbi leo urna molestie
-          atole elementum eu facilisis faucibus interdum posuere.
+          Temukan jawaban atas pertanyaan umum seputar prosedur pelaporan,
+          keamanan privasi, dan fitur layanan kami. Kami berkomitmen untuk
+          memberikan transparansi dan kemudahan dalam setiap aduan Anda.
         </p>
       </div>
       <div

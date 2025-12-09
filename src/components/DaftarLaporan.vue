@@ -1,54 +1,13 @@
 <script setup>
 import { ref, computed } from "vue";
+import { reportStore } from "../stores/reportStore";
 
 const searchTerm = ref("");
 const selectedStatus = ref("");
 
-const reports = ref([
-  {
-    id: 1,
-    title: "Banjir Bandang di Jalan Merdeka",
-    desc: "Banjir menggenangi jalan utama setelah hujan deras.",
-    location: "Jl. Merdeka No. 45, Balikpapan",
-    date: "20 November 2025",
-    img: "/src/assets/banjir.jpg",
-    status: "Menunggu",
-    time: "6 mins ago",
-    comments: 2,
-    category: "Banjir",
-    link: "#",
-  },
-  {
-    id: 2,
-    title: "Pohon Tumbang di Taman Kota",
-    desc: "Pohon besar tumbang dan menutup jalur pejalan kaki.",
-    location: "Jl. Taman Raya, Balikpapan",
-    date: "13 November 2025",
-    img: "/src/assets/banjir.jpg",
-    status: "Selesai",
-    time: "10 days ago",
-    comments: 0,
-    category: "Lingkungan",
-    link: "#",
-  },
-  {
-    id: 3,
-    title: "Longsor di Perbukitan",
-    desc: "Longsor kecil menghalangi akses jalan pedesaan.",
-    location: "Jl. Perbukitan Indah, Balikpapan Utara",
-    date: "22 November 2025",
-    img: "/src/assets/banjir.jpg",
-    status: "Proses",
-    time: "16 hours ago",
-    comments: 9,
-    category: "Bencana",
-    link: "#",
-  },
-]);
-
 const filteredReports = computed(() => {
   const q = searchTerm.value.trim().toLowerCase();
-  return reports.value.filter((r) => {
+  return reportStore.reports.filter((r) => {
     const matchesQ =
       !q ||
       r.title.toLowerCase().includes(q) ||
@@ -139,10 +98,11 @@ function statusClass(status) {
 
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
       <template v-if="filteredReports.length">
-        <div
+        <router-link
           v-for="report in filteredReports"
           :key="report.id"
-          class="rounded overflow-hidden shadow-lg flex flex-col bg-white"
+          :to="`/laporan/${report.id}`"
+          class="rounded overflow-hidden shadow-lg flex flex-col bg-white hover:shadow-xl transition-shadow cursor-pointer"
         >
           <div class="relative">
             <img
@@ -162,11 +122,11 @@ function statusClass(status) {
           </div>
 
           <div class="px-6 py-4 mb-auto">
-            <a
-              :href="report.link"
+            <h3
               class="font-medium text-lg text-gray-800 hover:text-indigo-600 block mb-2"
-              >{{ report.title }}</a
             >
+              {{ report.title }}
+            </h3>
             <p class="text-gray-500 text-sm mb-3">{{ report.desc }}</p>
             <div class="flex flex-col gap-1 text-xs text-gray-600">
               <div class="flex items-center gap-1">
@@ -258,10 +218,10 @@ function statusClass(status) {
                   d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z"
                 />
               </svg>
-              <span>{{ report.comments }} Comments</span>
+              <span>{{ report.comments.length }} Comments</span>
             </div>
           </div>
-        </div>
+        </router-link>
       </template>
 
       <div v-else class="col-span-full text-center text-gray-500 py-20">
