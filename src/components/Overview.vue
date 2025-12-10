@@ -1,7 +1,7 @@
 <template>
   <div class="bg-white py-24 sm:py-32">
     <div class="mx-auto max-w-7xl px-6 lg:px-8">
-      <div class="mx-auto max-w-2xl lg:text-center">
+      <div class="mx-auto max-w-2xl text-center">
         <p
           class="mt-2 text-4xl font-semibold tracking-tight text-pretty text-[#5D5A88] sm:text-5xl lg:text-balance"
         >

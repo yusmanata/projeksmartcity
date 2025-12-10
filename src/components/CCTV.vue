@@ -1,26 +1,48 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
+
+const currentTime = ref("");
+
+// Update timestamp every second for real-time effect
+onMounted(() => {
+  const updateTime = () => {
+    const now = new Date();
+    currentTime.value = now.toLocaleTimeString("id-ID", {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+    });
+  };
+  updateTime();
+  setInterval(updateTime, 1000);
+});
 
 const reports = ref([
   {
     id: 1,
     title: "CCTV Panjaitan",
     location: "Jl. Merdeka No. 45, Balikpapan",
-    img: "/src/assets/banjir.jpg",
+    video:
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+    status: "Online",
     link: "#",
   },
   {
     id: 2,
     title: "CCTV Taman Kota",
     location: "Jl. Taman Raya, Balikpapan",
-    img: "/src/assets/banjir.jpg",
+    video:
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4",
+    status: "Offline",
     link: "#",
   },
   {
     id: 3,
     title: "CCTV Perbukitan",
     location: "Jl. Perbukitan Indah, Balikpapan Utara",
-    img: "/src/assets/banjir.jpg",
+    video:
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+    status: "Online",
     link: "#",
   },
 ]);
@@ -76,28 +98,67 @@ const reports = ref([
           <div
             v-for="report in reports"
             :key="report.id"
-            class="rounded overflow-hidden shadow-lg flex flex-col bg-[#5D5A88]"
+            class="rounded overflow-hidden shadow-lg flex flex-col bg-white"
           >
             <div class="relative">
-              <img
+              <video
                 class="w-full h-64 object-cover"
-                :src="report.img"
-                :alt="report.title"
-              />
-              <div class="absolute inset-0 bg-black opacity-10"></div>
+                :class="{ grayscale: report.status === 'Offline' }"
+                muted
+                preload="metadata"
+              >
+                <source :src="report.video + '#t=0.1'" type="video/mp4" />
+                Browser tidak mendukung video.
+              </video>
+
+              <!-- LIVE Badge with Recording Indicator -->
+              <div
+                v-if="report.status === 'Online'"
+                class="absolute top-3 left-3 flex items-center gap-2 bg-red-600 text-white text-xs px-3 py-1 rounded font-semibold"
+              >
+                <span class="relative flex h-2 w-2">
+                  <span
+                    class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"
+                  ></span>
+                  <span
+                    class="relative inline-flex rounded-full h-2 w-2 bg-white"
+                  ></span>
+                </span>
+                LIVE
+              </div>
+
+              <!-- Real-time Timestamp -->
+              <div
+                v-if="report.status === 'Online'"
+                class="absolute bottom-3 left-3 bg-black/70 text-white text-xs px-2 py-1 rounded font-mono"
+              >
+                {{ currentTime }}
+              </div>
+
+              <!-- Status Badge -->
+              <div
+                :class="[
+                  'text-xs absolute top-3 right-3 px-3 py-1 rounded',
+                  report.status === 'Online'
+                    ? 'bg-green-600 text-white'
+                    : 'bg-gray-600 text-white',
+                ]"
+              >
+                {{ report.status }}
+              </div>
             </div>
 
             <div class="px-6 py-4 mb-auto">
               <a
                 :href="report.link"
-                class="font-medium text-lg text-white hover:text-indigo-200 block mb-2"
+                class="font-medium text-lg text-[#5D5A88] hover:text-indigo-200 block mb-2"
                 >{{ report.title }}</a
               >
 
-              <div class="flex flex-col gap-1 text-xs text-gray-200">
+              <div class="flex flex-col gap-1 text-xs text-[#5D5A88]">
                 <div class="flex items-center gap-1">
                   <svg
-                    class="h-3.5 w-3.5 text-gray-300"
+                    class="h-3.5 w-3.5 text-gray-500"
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
