@@ -5,6 +5,7 @@ import BuatLaporan from "../components/BuatLaporanPage.vue";
 import DaftarLaporan from "../components/DaftarLaporanPage.vue";
 import DaftarCCTVPage from "../components/DaftarCCTVPage.vue";
 import DetailLaporan from "../components/DetailLaporan.vue";
+import NamaGuePage from "../components/NamaGuePage.vue";
 
 const routes = [
   {
@@ -36,6 +37,11 @@ const routes = [
     path: "/laporan/:id",
     name: DetailLaporan,
     component: DetailLaporan,
+  },
+  {
+    path: "/NamaGue",
+    name: NamaGuePage,
+    component: NamaGuePage,
   },
 ];
 

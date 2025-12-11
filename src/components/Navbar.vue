@@ -65,6 +65,11 @@
           class="text-sm/6 font-semibold text-[#5D5A88] hover:bg-gray-100 px-2 md:px-3 py-2 rounded-lg transition-colors"
           >Kontak</router-link
         >
+        <router-link
+          to="/NamaGue"
+          class="text-sm/6 font-semibold text-[#5D5A88] hover:bg-gray-100 px-2 md:px-3 py-2 rounded-lg transition-colors"
+          >Nama Gue</router-link
+        >
       </div>
     </nav>
     <el-dialog>
@@ -139,6 +144,13 @@
                     commandfor="mobile-menu"
                     class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
                     >Kontak</router-link
+                  >
+                  <router-link
+                    to="/NamaGue"
+                    command="close"
+                    commandfor="mobile-menu"
+                    class="-mx-3 block rounded-lg px-3 py-2 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                    >Nama Gue</router-link
                   >
                 </div>
               </div>
